@@ -42,9 +42,34 @@ $view_subject = get_text($view['wr_subject']);
 
 <?php 
 	$week_w = array('일','월','화','수','목','금','토');
-	$wr_date = date('Y년 m월 d일 ('.$week_w[date("w")].') H:i', $view['date'])
-?>
+	$wr_date = date('Y년 m월 d일 ('.$week_w[date("w")].') H:i', $view['date']);
 
+		// 분류 사용 여부
+	$is_category = false;
+	$category_option = '';
+	if ($board['bo_use_category']) {
+			$is_category = true;
+			$category_href = G5_BBS_URL.'/board.php?bo_table='.$bo_table;
+
+			$category_option .= '<li><a href="'.$category_href.'"';
+			if ($sca=='')
+					$category_option .= ' id="bo_cate_on"';
+			$category_option .= '>전체</a></li>';
+
+			$categories = explode('|', $board['bo_category_list']); // 구분자가 , 로 되어 있음
+			for ($i=0; $i<count($categories); $i++) {
+					$category = trim($categories[$i]);
+					if ($category=='') continue;
+					$category_option .= '<li><a href="'.($category_href."&amp;sca=".urlencode($category)).'"';
+					$category_msg = '';
+					if ($category==$sca) { // 현재 선택된 카테고리라면
+							$category_option .= ' id="bo_cate_on"';
+							$category_msg = '<span class="sound_only">열린 분류 </span>';
+					}
+					$category_option .= '>'.$category_msg.$category.'</a></li>';
+			}
+	}
+?>
 
 
 <!-- 카테고리 시작 -->
@@ -54,13 +79,12 @@ if($is_category)
 ?>
 <!-- 카테고리 끝 -->
 
-
 <section itemscope itemtype="http://schema.org/NewsArticle" class="i_board_view please">
-
+<!-- 
 	<div class="i_board_header">
 		<b class="board_header_subtit">개인</b>
 		<span>해주세요</span>
-	</div>
+	</div> -->
 
 
 	<div class="i_board_content">
@@ -71,6 +95,33 @@ if($is_category)
 				등록일: <?php echo $wr_date; ?>
 				<!-- <?php echo apms_date($wr_date, 'orangered', 'before'); //시간 ?> -->
 			</span>
+
+			<?php 
+				// SNS 보내기
+				if ($board['bo_use_sns']) {
+					echo apms_sns_share_icon('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], $view['subject'], $seometa['img']['src']);
+				}
+			?>
+
+			<div class="optional_btns">
+				<button class="print_btn i_btn cursor at-tip" alt="프린트" type="button" data-original-title="프린트" data-toggle="tooltip" onclick="apms_print();"><i class="fa fa-print" aria-hidden="true"></i> <span>인쇄하기</span></button>
+				<?php if ($scrap_href) { ?>
+					<button class="scrap_btn i_btn cursor at-tip" alt="스크랩" type="button" onclick="win_scrap('<?php echo $scrap_href;  ?>');" data-original-title="스크랩" data-toggle="tooltip" onclick="apms_print();"><i class="fa fa-star-o" aria-hidden="true"></i> <span>스크랩</span></button>
+				<?php } ?>
+				<?php if ($is_shingo) { ?>
+					<button class="shingo_btn i_btn cursor at-tip" alt="신고" type="button"onclick="apms_shingo('<?php echo $bo_table;?>', '<?php echo $wr_id;?>');" data-original-title="신고" data-toggle="tooltip"><i class="fa fa-ban" aria-hidden="true"></i> <span>허위정보 신고</span></button>
+				<?php } ?>
+				<?php if ($is_admin) { ?>
+					<?php if ($view['is_lock']) { // 글이 잠긴상태이면 ?>
+						<button class="unlock_btn i_btn cursor at-tip" alt="잠금해제" type="button"  onclick="apms_shingo('<?php echo $bo_table;?>', '<?php echo $wr_id;?>', 'unlock');" data-original-title="해제" data-toggle="tooltip"><i class="fa fa-unlock" aria-hidden="true"></i> <span>잠금해제</span></button>
+					<?php } else { ?>
+						<button class="lock_btn i_btn cursor at-tip" alt="잠금" type="button"  onclick="apms_shingo('<?php echo $bo_table;?>', '<?php echo $wr_id;?>', 'lock');" data-original-title="잠금" data-toggle="tooltip"><i class="fa fa-lock" aria-hidden="true"></i> <span>잠금</span></button>
+					<?php } ?>
+				<?php } ?>
+			</div>
+
+
+			<div class="clearfix"></div>
 		</div>
 	</div>
 
@@ -90,41 +141,72 @@ if($is_category)
 				</div>
 				
 				<!-- 여분필드 출력 시작 -->
-				<div class="extra_fields">
-
+				<div class="extra_fields write">
 					<p>
-						<span itemprop="publisher" content="<?php echo get_text($view['wr_name']);?>">
+						<span class="profile_img">
+							img
+						</span>
+						<span class="profile_name" itemprop="publisher" content="<?php echo get_text($view['wr_name']);?>">
 							<?php echo $view['name']; //등록자 ?>
 						</span>
-						<?php echo ($is_ip_view) ? '<span class="print-hide hidden-xs">('.$ip.')</span>' : ''; ?>
 
 						<button type="button" class="user_info_btn">유저정보</button>
 					</p>
 
-					<?php print_r($view) ?>
+					
 					<!-- 모든/지정 분류 · 지정 크리에이터 이름 시작 -->
 					<p>
 						<span>
-							<?php echo $view['wr_2'] ? $view['wr_2'] : '카테고리를 출력 할 수 없습니다.' ?>
+							<?php echo $view['wr_3']; ?><?php echo $view['wr_4'] === '' ?  '' : ' | '.$view['wr_4']. ' | ' ?>
 						</span>
 						<span>
-							<?php echo $view['wr_3'] ?><?php echo $view['wr_4'] === '' ?  '' : ' · '.$view['wr_4'] ?>
-						</span>
-						<span>
-							<?php echo $view['wr_5'] ? $view['wr_5'] : '플랫폼 정보를 출력 할 수 없습니다.' ?>
+							<?php echo $view['wr_5']; ?>
 						</span>
 					</p>
 					<!-- 모든/지정 분류 · 지정 크리에이터 이름 끝 -->
 
-					<p>
-						<span>기간</span>
-						<span>2019.12.26 - 2020.02.26</span>
+					<!-- 마감날짜 시작 -->
+					<p class="content_body_term">
+						<span>
+							기간
+						</span>
+						<span>
+							<?php echo $view['wr_2']; ?>
+						</span>
 					</p>
+					<!-- 마감날짜 끝 -->
 
-					<p>
+					<!-- 아몬드볼 시작 -->
+					<p class="content_body_aball">
 						<span>아몬드볼</span>
-						<span><?php echo $view['wr_1'] ? $view['wr_1'] : '아몬드 정보를 출력 할 수 없습니다.' ?></span>
-						<span>ABOLL</span>
+						<span><b><?php echo $view['wr_1']; ?></b></span>
+						<span><b>ABOLL</b></span>
+						<button type="button">아몬드볼 얹기</button>
+					</p>
+					<!-- 아몬드볼 끝 -->
+
+					<div class="info">
+						<p>
+							<span>아몬드볼</span>
+							<span>총 190 ABOLL</span>
+						</p>
+						<p>
+							<span>추가 참여자</span>
+							<span>15 명</span>
+						</p>
+						<p>
+							진행중
+						</p>
+
+						<div class="popular">
+							<i class="fa fa-eye"></i> <?php echo $view['wr_hit']; ?>															
+							<i class="fa fa-thumbs-up"></i> <?php echo $view['wr_good']; ?>							
+							<i class="fa fa-thumbs-down"></i> <?php echo $view['wr_nogood']; ?>
+						</div>
+					</div>
+
+					<p class="comment">
+						<i class="fa fa-commenting" aria-hidden="true"></i> 부적절하고 폭력적, 불쾌감을 주는 내용일 경우 법적 처벌을 받을 수 있습니다.
 					</p>
 
 				</div>
@@ -174,8 +256,16 @@ if($is_category)
 			?>
 		</div>
 
+		<div class="content_sns">
+			더 많은 참여를 위해 SNS 등에 페이지를 공유하는 것이 도움이 됩니다.
 
-		<div class="view-padding">
+			<button type="button" class="facebook"></button>
+			<button type="button" class="naver"></button>
+			<button type="button" class="kakao"></button>
+			<button type="button" class="twitch"></button>
+		</div>
+
+		<div class="">
 
 			<?php if ($is_torrent) echo apms_addon('torrent-basic'); // 토렌트 파일정보 ?>
 
@@ -196,7 +286,28 @@ if($is_category)
 			 ?>
 
 			<div itemprop="description" class="view-content">
+				<h4>상세내용</h4>
 				<?php echo get_view_thumbnail($view['content']); ?>
+			</div>
+
+			<!-- 상세조건 시작 -->
+			<div class="view-content view_detail_condition">
+				<h4 class=" border-none">상세조건</h4>
+				<p>
+					- 컨셉: <?php echo $view['wr_8']; ?>
+				</p>
+				<p>
+					- 스토리보드: <?php echo $view['wr_9']; ?>
+				</p>
+				<p>
+					- 조건: <?php echo $view['wr_10']; ?>
+				</p>
+			</div>
+			<!-- 상세조건 끝 -->
+
+			<div class="view_detail_join">
+				<button type="button">답변참여</button>
+				<a href="#" class="participants_list_btn">참여자명단</a>
 			</div>
 
 			<?php
@@ -243,31 +354,6 @@ if($is_category)
 			<p class="view-tag view-padding<?php echo $view_font;?>"><i class="fa fa-tags"></i> <?php echo $tag_list;?></p>
 		<?php } ?>
 
-		<div class="print-hide view-icon view-padding">
-			<?php 
-				// SNS 보내기
-				if ($board['bo_use_sns']) {
-					echo apms_sns_share_icon('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], $view['subject'], $seometa['img']['src']);
-				}
-			?>
-			<span class="pull-right">
-				<img src="<?php echo G5_IMG_URL;?>/sns/print.png" alt="프린트" class="cursor at-tip" onclick="apms_print();" data-original-title="프린트" data-toggle="tooltip">
-				<?php if ($scrap_href) { ?>
-					<img src="<?php echo G5_IMG_URL;?>/sns/scrap.png" alt="스크랩" class="cursor at-tip" onclick="win_scrap('<?php echo $scrap_href;  ?>');" data-original-title="스크랩" data-toggle="tooltip">
-				<?php } ?>
-				<?php if ($is_shingo) { ?>
-					<img src="<?php echo G5_IMG_URL;?>/sns/shingo.png" alt="신고" class="cursor at-tip" onclick="apms_shingo('<?php echo $bo_table;?>', '<?php echo $wr_id;?>');" data-original-title="신고" data-toggle="tooltip">
-				<?php } ?>
-				<?php if ($is_admin) { ?>
-					<?php if ($view['is_lock']) { // 글이 잠긴상태이면 ?>
-						<img src="<?php echo G5_IMG_URL;?>/sns/unlock.png" alt="해제" class="cursor at-tip" onclick="apms_shingo('<?php echo $bo_table;?>', '<?php echo $wr_id;?>', 'unlock');" data-original-title="해제" data-toggle="tooltip">
-					<?php } else { ?>
-						<img src="<?php echo G5_IMG_URL;?>/sns/lock.png" alt="잠금" class="cursor at-tip" onclick="apms_shingo('<?php echo $bo_table;?>', '<?php echo $wr_id;?>', 'lock');" data-original-title="잠금" data-toggle="tooltip">
-					<?php } ?>
-				<?php } ?>
-			</span>
-			<div class="clearfix"></div>
-		</div>
 
 		<?php if($is_signature) { // 서명 ?>
 			<div class="print-hide">
@@ -279,7 +365,24 @@ if($is_category)
 
 	</article>
 
+	<article class="contents_upload">
+		<button type="button" id="contents_upload_btn">컨텐츠 올리기</button>
+	</article>
+
+	<article class="view_comment_wrap">
+		<?php include_once('./view_comment.php'); ?>
+	</article>
+
 
 </section>
 
-<?php include_once('./view_comment.php'); ?>
+
+<script>
+		(() => {
+			// 썸네일 없을 시 대체 이미지 삽입
+			const thumbnail = document.querySelector('.content_body_thumnail')
+			if (!thumbnail.children.length) {
+				thumbnail.innerHTML = `<img src="/custom/images/thumb-no-img_202x150.jpg" style="width: 100%;" />`
+			}
+		})()
+</script>

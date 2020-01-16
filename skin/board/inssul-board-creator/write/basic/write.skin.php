@@ -17,7 +17,6 @@ if(!$header_skin) {
 
 <!-- 게시물 작성/수정 시작 -->
 <?php
-//print_r($config);
     // 업데이트 게시판은 기존에서
     // $action_url 에서 새로 수정 생성함.
     $action_tem = $action_url;
@@ -116,11 +115,6 @@ if(!$header_skin) {
 <div class="i_title">
 	<h3>글쓰기</h3>
 </div>
-
-
-
-
-
 
 <!-- 포토 시작 (임시 숨김처리) -->
 <div class="i_fg" style="display: none;">
@@ -226,27 +220,6 @@ if(!$header_skin) {
 <?php } ?>
 <!-- 카테고리 끝 -->
 
-
-
-<!-- 카테고리 필드 추가 시작
-<div class="i_fg">
-	<label class="f_cl" for="wr_category"><?php echo $board['bo_3_subj'] ?><strong class="sound_only">필수</strong></label>
-	<div class="f_ci">
-		<div class="input-group">
-		<select name="wr_3" id="wr_category" class="input-sm" style="border-radius:0">
-			<?php
-				$item_list = explode(',', $board['bo_3']);
-				for ($i=0; $i<count($item_list); $i++) {
-						$option_item = trim($item_list[$i]);
-			?>
-				<option value="<?php echo $option_item ?>"<?php echo ($write['wr_3'] == $option_item) ? " selected" : "";?>><?php echo $option_item ?></option>
-			<?php } ?>
-		</select>
-		</div>
-	</div>
-</div>
- 카테고리 필드 추가 끝 -->
-
 <!-- 크리에이터 분류 필드 추가 시작 -->
 <div class="i_fg">
 	<label class="f_cl" for="wr_creator_target"><?php echo $board['bo_4_subj'] ?><strong class="sound_only">필수</strong></label>
@@ -288,23 +261,6 @@ if(!$header_skin) {
 		</div>
 	</div>
 </div> -->
-<!--<div class="i_fg">-->
-<!--	<label class="f_cl" for="wr_select_platform">--><?php //echo $board['bo_5_subj'] ?><!--<strong class="sound_only">필수</strong></label>-->
-<!--	<div class="f_ci">-->
-<!--		<div class="input-group">-->
-<!--		<select name="wr_5" id="wr_select_platform" class="input-sm" style="border-radius:0">-->
-<!--			--><?php
-//				$item_list = explode(',', $board['bo_5']);
-//				for ($i=0; $i<count($item_list); $i++) {
-//						$option_item = trim($item_list[$i]);
-//			?>
-<!--				<option value="--><?php //echo $option_item; ?><!--"--><?php //echo ($write['wr_5'] == $option_item) ? " selected" : "";?>
-    <!--<?php //echo $option_item ?></option>-->
-<!--			--><?php //} ?>
-<!--		</select>-->
-<!--		</div>-->
-<!--	</div>-->
-<!--</div>-->
 <!-- 플랫폼 필드 추가 끝 -->
 
 <!-- 우선노출 필드 추가 시작 -->
@@ -421,9 +377,9 @@ if(!$header_skin) {
 				<div class="f_ci condition_link">
 					<input type="url" name="wr_link<?php echo $i ?>" value="<?php echo $write['wr_link'.$i]; ?>" id="wr_link<?php echo $i ?>" class="form-control input-sm" size="50">
 					<?php if($i == "1") { ?>
-						<!-- <div class="text-muted font-12" style="margin-top:4px;">
+						<div class="text-muted font-12" style="margin-top:4px;">
 							유튜브, 비메오 등 동영상 공유주소 등록시 해당 동영상은 본문 자동실행
-						</div> -->
+						</div>
 					<?php } ?>
 				</div>
 			</div>
@@ -440,78 +396,7 @@ if(!$header_skin) {
 		<input type="file" id="write_upload" name="bf_file[]" multiple accept="image/*" />
 		<table id="variableFiles" style="display: none;"></table>
 	</div>
-
-	<!-- <script>
-	var flen = 0;
-	function add_file(delete_code) {
-		var upload_count = <?php echo (int)$board['bo_upload_count']; ?>;
-		if (upload_count && flen >= upload_count) {
-			alert("이 게시판은 "+upload_count+"개 까지만 파일 업로드가 가능합니다.");
-			return;
-		}
-
-		var objTbl;
-		var objNum;
-		var objRow;
-		var objCell;
-		var objContent;
-		if (document.getElementById)
-			objTbl = document.getElementById("variableFiles");
-		else
-			objTbl = document.all["variableFiles"];
-
-		objNum = objTbl.rows.length;
-		objRow = objTbl.insertRow(objNum);
-		objCell = objRow.insertCell(0);
-
-		objContent = "<div class='row'>";
-		objContent += "<div class='col-sm-7'><div class='i_fg'><div class='input-group input-group-sm'><span class='input-group-addon'>파일 "+objNum+"</span><input type='file' class='form-control input-sm' name='bf_file[]' title='파일 용량 <?php echo $upload_max_filesize; ?> 이하만 업로드 가능'></div></div></div>";
-		if (delete_code) {
-			objContent += delete_code;
-		} else {
-			<?php if ($is_file_content) { ?>
-			objContent += "<div class='col-sm-5'><div class='i_fg'><input type='text'name='bf_content[]' class='form-control input-sm' placeholder='이미지에 대한 내용을 입력하세요.'></div></div>";
-			<?php } ?>
-			;
-		}
-		objContent += "</div>";
-
-		objCell.innerHTML = objContent;
-
-		flen++;
-	}
-
-	<?php echo $file_script; //수정시에 필요한 스크립트?>
-
-	function del_file() {
-		// file_length 이하로는 필드가 삭제되지 않아야 합니다.
-		var file_length = <?php echo (int)$file_length; ?>;
-		var objTbl = document.getElementById("variableFiles");
-		if (objTbl.rows.length - 1 > file_length) {
-			objTbl.deleteRow(objTbl.rows.length - 1);
-			flen--;
-		}
-	}
-	</script> -->
-
-	<!-- <div class="i_fg">
-		<label class="f_cl">첨부사진</label>
-		<div class="">
-			<label class="f_cl sp-label">
-				<input type="radio" name="as_img" value="0"<?php if(!$write['as_img']) echo ' checked';?>> 상단출력
-			</label>
-			<label class="f_cl sp-label">
-				<input type="radio" name="as_img" value="1"<?php if($write['as_img'] == "1") echo ' checked';?>> 하단출력
-			</label>
-			<label class="f_cl sp-label">
-				<input type="radio" name="as_img" value="2"<?php if($write['as_img'] == "2") echo ' checked';?>> 본문삽입
-			</label>
-			<div class="text-muted font-12" style="margin-top:4px;">
-				본문삽입시 {이미지:0}, {이미지:1} 형태로 글내용 입력시 지정 첨부사진이 출력됨
-			</div>
-		</div>
-	</div>
-<?php } ?> -->
+<?php } ?> 
 
 <?php if ($captcha_html) { //자동등록방지  ?>
 	<div class="well well-sm text-center">

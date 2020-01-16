@@ -10,8 +10,6 @@ $g5['title'] = '게시글 저장';
 
 $msg = array();
 
-
-
 if(!$board['bo_table']) {
     exit; //존재하지 않는 게시판은 작동안함
 }

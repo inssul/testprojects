@@ -77,11 +77,6 @@ $list_cnt = count($list);
 
 	<?php @include_once($list_skin_path.'/list.head.skin.php'); // 헤드영역 ?>
 
-    <?php
-
-
-    ?>
-
 	<!-- 우선노출 시작 -->
 	<div class="premium_exposure">
 		<div class="title">우선노출</div>
@@ -333,7 +328,6 @@ $list_cnt = count($list);
 					<?php } ?>
 				</ul>
 			</div>
-
 			<div class="clearfix"></div>
 			<?php if ($is_checkbox || $setup_href || $admin_href) { ?>
 				<div class="list-admin">

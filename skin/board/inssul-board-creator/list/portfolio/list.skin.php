@@ -78,7 +78,6 @@ for ($i=0; $i < $list_cnt; $i++) {
 		$thumb = ($is_lock) ? apms_thumbnail($list[$i]['no_img'], $thumb_w, $thumb_h, false, true) : apms_wr_thumbnail($bo_table, $list[$i], $thumb_w, $thumb_h, false, true);
 	}
 ?>
-	<img src="" alt="">
 	<?php if(!$boset['masonry'] && $k > 0 && $k%$board['bo_gallery_cols'] == 0) { ?>
 		<div class="list-row clearfix"></div>
 	<?php } ?>
@@ -87,7 +86,7 @@ for ($i=0; $i < $list_cnt; $i++) {
 			<?php if($thumb['src']) { ?>
 				<?php if($thumb_h > 0) { ?>
 					<div class="imgframe">
-						<div class="img-wrap" style="padding-bottom:<?php echo $img_h;?>%;">
+						<div class="img-wrap item_thumbnail" style="padding-bottom:<?php echo $img_h;?>%;">
 							<div class="img-item">
 								<?php echo $wr_label;?>
 								<?php if($boset['lightbox']) { //라이트박스 ?>
@@ -98,13 +97,16 @@ for ($i=0; $i < $list_cnt; $i++) {
 									<img src="<?php echo $thumb['src'];?>" alt="<?php echo $thumb['alt'];?>">
 								</a>
 							</div>
+							<!-- //img -->
 						</div>
 						<?php if($is_date) { ?>
 							<div class="list-date <?php echo $is_date;?> en">
 								<?php echo date("Y.m.d", $list[$i]['date']); ?>
 							</div>
 						<?php } ?>
+						<!-- //date -->
 					</div>
+					<!-- //imgframe -->
 				<?php } else { ?>
 					<div class="list-img">
 						<?php echo $wr_label;?>
@@ -125,23 +127,32 @@ for ($i=0; $i < $list_cnt; $i++) {
 				<?php if($boset['shadow']) echo apms_shadow($boset['shadow']); //그림자 ?>
 			<?php } ?>
 
-
+			<!-- 게시물 컨텐츠 시작 -->
 			<div class="list-content">
 
-            
-				<div class="list-details text-muted">
+				<!-- 게시물 분류정보 시작 -->
+				<div class="item_category">
+					<span class="category_type"><?php echo $list[$i]['wr_3'] ?></span> <!-- 모든/지정 분류 · 지정 크리에이터 이름 -->
+					
+					<?php if($list[$i]['wr_4'] === '모든 크리에이터') { ?>
+						<span class="creator_type">모든 크리에이터</span>
+					<?php } else { ?>
+						<span class="creator_type <?php echo 'target'; ?>">지정 크리에이터 · </span>
+						<span class="creator_name <?php echo $platform; ?>"><?php echo $list[$i]['wr_5'] ?></span>
+					<?php } ?>
+
+					<span class="process">진행중</span>
+
 					<?php if ($is_checkbox) { ?>
-						<span class="pull-right">
-							<input type="checkbox" name="chk_wr_id[]" value="<?php echo $list[$i]['wr_id'] ?>" id="chk_wr_id_<?php echo $i ?>">
-						</span>	
-					<?php } ?>
-					<?php echo $list[$i]['name'];?>
-					<?php if($is_category && $list[$i]['ca_name']) { ?>
-						<span class="list-sp">|</span>
-						<?php echo $list[$i]['ca_name'];?>
-					<?php } ?>
-				</div>
-				<h2>
+            <span class="pull-right">
+                <input type="checkbox" name="chk_wr_id[]" value="<?php echo $list[$i]['wr_id'] ?>" id="chk_wr_id_<?php echo $i ?>">
+            </span>	
+        	<?php } ?>
+    		</div>
+				<!-- 게시물 분류정보 끝 -->
+
+				<!-- 게시물 제목 시작 -->
+				<h2 class="item_title">
 					<a href="<?php echo $list[$i]['href'];?>"<?php echo $ellipsis;?><?php echo $list[$i]['target'];?><?php echo $is_modal_js;?>>
 						<?php echo $wr_icon;?>
 						<?php echo $wr_lock;?>
@@ -152,50 +163,51 @@ for ($i=0; $i < $list_cnt; $i++) {
 						<?php } ?>
 					</a>
 				</h2>
-				<div class="list-cont">
+				<!-- 게시물 제목 끝 -->
+
+				<!-- 게시물 설명 시작 -->
+				<div class="item_desc">
 					<a href="<?php echo $list[$i]['href'];?>"<?php echo $list[$i]['target'];?><?php echo $is_modal_js;?>>
 						<span class="text-muted">
 							<?php 
 								$len = ($thumb['src']) ? $cont_len : $ncont_len;
-								echo apms_cut_text($list[$i]['wr_content'], 18,'… <span class="font-11 text-muted">더보기</span>');
+								echo apms_cut_text($list[$i]['wr_content'], 60,'···');
 							?>
 						</span>
 					</a>
 				</div>
+				<!-- 게시물 설명 끝 -->
 
-				<div class="d_day">
+				<!-- 게시물 작성자 시작 -->
+				<div class="item_writer">
+					<?php echo $list[$i]['name'];?>
+				</div>
+				<!-- 게시물 작성자 끝 -->
+
+				<!-- <div class="item_d_day">
 					<?php print_r($list[$i]['wr_2']); ?>
-				</div>
+				</div> -->
 
+				<!-- 게시물 상태정보 시작 -->
+				<div class="item_status">
+            <span class="s_comment">
+                <i class="fa fa-comment" aria-hidden="true"></i> <em><?php echo $list[$i]['wr_is_comment']; ?></em>
+            </span>
+            <span class="s_like">
+                <i class="fa fa-thumbs-up" aria-hidden="true"></i> <em><?php echo $list[$i]['wr_good']; ?></em>
+            </span>
+            <span class="s_interest">
+                <i class="fa fa-eye" aria-hidden="true"></i> <?php echo $list[$i]['wr_hit']; ?>
+            </span>
+            <span class="s_amond">
+                <i class="icon-a-ball" aria-hidden="true"></i> <?php echo $list[$i]['wr_1']; ?>
+            </span>
+            <a class="s_more_btn" href="<?php echo $list[$i]['href'];?>">More</a>
+					</div>
+					<!-- 게시물 상태정보 시작 -->
 
-				<div class="list-read text-muted">
-					<div class="pull-left">
-						<i class="fa fa-comment"></i>
-						<?php echo ($list[$i]['wr_comment']) ? '<span class="red">'.number_format($list[$i]['wr_comment']).'</span>' : 0;?>
-						<?php if ($is_good) { ?>
-							&nbsp;&nbsp;
-							<i class="fa fa-thumbs-up"></i>
-							<?php echo ($list[$i]['wr_good']) ? '<span class="blue">'.number_format($list[$i]['wr_good']).'</span>' : 0;?>
-						<?php } ?>
-						&nbsp;&nbsp;
-						<i class="fa fa-eye"></i>
-						<?php echo number_format($list[$i]['wr_hit']);?>
-						<?php if ($boset['udp'] && $list[$i]['as_down']) { ?>
-							&nbsp;&nbsp;
-							<i class="fa fa-download"></i>
-							<?php echo number_format($list[$i]['as_down']); ?>P
-						<?php } ?>
-					</div>
-					<div class="read-more pull-right">
-						<a href="<?php echo $list[$i]['href'];?>"<?php echo $list[$i]['target'];?><?php echo $is_modal_js;?>>
-							<span class="font-11 en">
-								More <i class="fa fa-angle-right fa-lg"></i>
-							</span>
-						</a>
-					</div>
-					<div class="clearfix"></div>
-				</div>
 			</div>
+			<!-- 게시물 컨텐츠 끝 -->
 		</div>
 	</div>
 <?php $k++; } ?>

@@ -27,7 +27,7 @@
 .view-good-box .view-nogood a:hover { background: rgb(0, 0, 0); color: rgb(255, 255, 255); }
 .view-author .auth-photo { width:160px; padding-right:15px; }
 .view-icon { margin-bottom:10px; }
-.view-icon img { width:34px; border-radius:50%; margin-bottom:5px; }
+/* .view-icon img { width:34px; border-radius:50%; margin-bottom:5px; } */
 .view-comment { margin: 0px; padding: 0px 0px 5px; text-transform: capitalize; overflow: hidden; border-bottom: 1px solid rgb(51, 51, 51); display: inline-block; position: relative; }
 
 /* Padding */

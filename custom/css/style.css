@@ -690,7 +690,7 @@ ol, ul, li {
 .i_title {
   height: 40px;
   position: relative;
-  margin-top: 20px;
+  margin-top: 5px;
   margin-bottom: 20px;
   border-bottom: 1px solid #e6e6e6; }
   .i_title:after {
@@ -1742,4 +1742,3 @@ input[type=number] {
   .basic_exposure .sub_title em {
     color: #e7464b;
     font-style: normal; }
-

@@ -25,7 +25,7 @@ $cmt_amt = count($list);
 ?>
 
 <div class="view-comment font-18 en">
-	<i class="fa fa-commenting"></i> <span class="orangered"><?php echo number_format($write['wr_comment']);?></span> Comments
+	<i class="fa fa-commenting"></i> <span class="orangered"><?php echo number_format($write['wr_comment']);?></span> 
 </div>
 
 <script>

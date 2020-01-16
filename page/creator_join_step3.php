@@ -399,7 +399,6 @@ switch($mo) {
                                     <button type="button" class="cancel_img_btn"><i class='icon-cancel-circle'></i></button>
                                     <?php echo ($myphoto) ? '<img src="'.$myphoto.'" alt="">' : '<span style="font-size: 18px">+<br/>Upload</span>'; ?>
                                 </label>
-                                <input type="hidden" value="false" id="delete_dashboard" class="extra_delete" name="delete_dashboard"/>
                                 <input type="file" name="platform_photo" id="upload_dashboard">
                                 <input type="hidden" value="false" id="delete_dashboard" class="extra_delete" name="delete_dashboard"/>
                             </div>

@@ -1,0 +1,15 @@
+@charset "utf-8";
+
+.inssul-gallery-please { overflow:hidden; line-height:20px; }
+.inssul-gallery-please .txt-normal { letter-spacing:0; }
+.inssul-gallery-please .txt-short { letter-spacing:-1px; padding-right:1px; }
+.inssul-gallery-please .post-vicon { position:absolute; left:6px; top:6px; color: #fff; font-size:20px; z-index:1; text-shadow: 1px 1px 1px #000; }
+.inssul-gallery-please .post-none { padding:50px 10px; text-align:center; color:#888; }
+.inssul-gallery-please .post-row { float:left; overflow:hidden; }
+.inssul-gallery-please .post-list { overflow:hidden; margin-right: 20px !important; margin-bottom: 20px !important;}
+.inssul-gallery-please .post-image { position:relative; overflow:hidden; margin-bottom: 10px;}
+.inssul-gallery-please .post-content { padding-top:10px; margin:-2px 0px; overflow:hidden; }
+.inssul-gallery-please .post-subject { overflow:hidden; letter-spacing:-1px; padding-right:1px; }
+.inssul-gallery-please .post-sp { color:#ccc; margin:0px 4px; }
+.inssul-gallery-please .post-text { font-size:12px; color:#888; margin-top:4px; }
+.is-pc .ko .inssul-gallery-please .post-ko { font-size:11px; }
